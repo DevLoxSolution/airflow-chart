@@ -2294,7 +2294,6 @@ class Airflow(AirflowBaseView):
         self,
         dag_id,
         task_id,
-        map_indexes,
         origin,
         dag_run_id,
         upstream,
@@ -2302,6 +2301,7 @@ class Airflow(AirflowBaseView):
         future,
         past,
         state,
+        map_indexes=None,
     ):
         dag = current_app.dag_bag.get_dag(dag_id)
         latest_execution_date = dag.get_latest_execution_date()
@@ -2382,7 +2382,6 @@ class Airflow(AirflowBaseView):
 
         to_be_altered = set_state(
             tasks=[(task, map_index) for map_index in map_indexes],
-            map_indexes=map_indexes,
             run_id=dag_run_id,
             upstream=upstream,
             downstream=downstream,
@@ -2437,7 +2436,6 @@ class Airflow(AirflowBaseView):
         return self._mark_task_instance_state(
             dag_id,
             task_id,
-            map_indexes,
             origin,
             dag_run_id,
             upstream,
@@ -2445,6 +2443,7 @@ class Airflow(AirflowBaseView):
             future,
             past,
             State.FAILED,
+            map_indexes=map_indexes,
         )
 
     @expose('/success', methods=['POST'])
@@ -2477,7 +2476,6 @@ class Airflow(AirflowBaseView):
         return self._mark_task_instance_state(
             dag_id,
             task_id,
-            map_indexes,
             origin,
             dag_run_id,
             upstream,
@@ -2485,6 +2483,7 @@ class Airflow(AirflowBaseView):
             future,
             past,
             State.SUCCESS,
+            map_indexes=map_indexes,
         )
 
     @expose('/dags/<string:dag_id>')
